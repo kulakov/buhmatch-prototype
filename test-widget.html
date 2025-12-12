@@ -6,129 +6,517 @@
     <title>Тест виджета БухМэтч на buhonline.ru</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
+            background: #f4f4f4;
+            min-height: 100vh;
         }
-        .toolbar {
+
+        /* Тулбар разработчика */
+        .dev-toolbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: #1e1e1e;
+            background: #1a1a2e;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 20px;
             display: flex;
             align-items: center;
             gap: 20px;
             z-index: 100000;
-            font-size: 13px;
-        }
-        .toolbar a {
-            color: #60a5fa;
-            text-decoration: none;
-        }
-        .toolbar code {
-            background: #333;
-            padding: 4px 8px;
-            border-radius: 4px;
             font-size: 12px;
         }
-        .site-frame {
-            width: 100%;
-            height: 100vh;
-            padding-top: 44px;
+        .dev-toolbar a { color: #60a5fa; text-decoration: none; }
+        .dev-toolbar code {
+            background: #333;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
         }
-        .site-frame iframe {
+
+        /* === МУЛЯЖ BUHONLINE.RU === */
+        .buh-site {
+            padding-top: 40px;
+        }
+
+        /* Шапка */
+        .buh-header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0;
+        }
+        .buh-header-top {
+            background: #f8f8f8;
+            padding: 6px 0;
+            font-size: 12px;
+            color: #666;
+            border-bottom: 1px solid #eee;
+        }
+        .buh-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .buh-header-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+        .buh-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a5f7a;
+            text-decoration: none;
+        }
+        .buh-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1a5f7a 0%, #2e86ab 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        .buh-search {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 40px;
+        }
+        .buh-search input {
             width: 100%;
-            height: 100%;
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .buh-auth {
+            display: flex;
+            gap: 12px;
+        }
+        .buh-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
             border: none;
         }
-        .fallback {
-            padding: 60px 20px 20px;
-            max-width: 900px;
-            margin: 0 auto;
+        .buh-btn-outline {
+            background: transparent;
+            border: 1px solid #1a5f7a;
+            color: #1a5f7a;
         }
-        .fallback h1 { margin-bottom: 20px; color: #333; }
-        .fallback p { color: #666; line-height: 1.6; margin-bottom: 15px; }
-        .fallback .box {
+        .buh-btn-primary {
+            background: #1a5f7a;
+            color: white;
+        }
+
+        /* Навигация */
+        .buh-nav {
+            background: #1a5f7a;
+        }
+        .buh-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 0;
+        }
+        .buh-nav li a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .buh-nav li a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .buh-nav li.active a {
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Контент */
+        .buh-content {
+            padding: 30px 0;
+        }
+        .buh-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+
+        /* Карточки статей */
+        .buh-articles {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .buh-article {
             background: white;
+            border-radius: 8px;
             padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
-        .fallback pre {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 15px;
+        .buh-article-category {
+            display: inline-block;
+            background: #e8f4f8;
+            color: #1a5f7a;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .buh-article h2 {
+            font-size: 18px;
+            color: #1a5f7a;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .buh-article h2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .buh-article h2 a:hover {
+            text-decoration: underline;
+        }
+        .buh-article p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .buh-article-meta {
+            font-size: 12px;
+            color: #999;
+        }
+        .buh-article-meta span {
+            margin-right: 15px;
+        }
+
+        /* Сайдбар */
+        .buh-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .buh-widget {
+            background: white;
             border-radius: 8px;
-            overflow-x: auto;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .buh-widget h3 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a5f7a;
+        }
+        .buh-widget-list {
+            list-style: none;
+        }
+        .buh-widget-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .buh-widget-list li:last-child {
+            border-bottom: none;
+        }
+        .buh-widget-list a {
+            color: #1a5f7a;
+            text-decoration: none;
             font-size: 13px;
         }
-        .fallback .arrow {
+        .buh-widget-list a:hover {
+            text-decoration: underline;
+        }
+
+        /* Баннер */
+        .buh-banner {
+            background: linear-gradient(135deg, #1a5f7a 0%, #2e86ab 100%);
+            border-radius: 8px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        .buh-banner h3 {
+            border: none;
+            padding: 0;
+            margin-bottom: 8px;
+            color: white;
+        }
+        .buh-banner p {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+        .buh-banner .buh-btn {
+            background: white;
+            color: #1a5f7a;
+            font-weight: 600;
+        }
+
+        /* Футер */
+        .buh-footer {
+            background: #1a1a2e;
+            color: #aaa;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+        .buh-footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .buh-footer h4 {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .buh-footer ul {
+            list-style: none;
+        }
+        .buh-footer li {
+            margin-bottom: 8px;
+        }
+        .buh-footer a {
+            color: #888;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .buh-footer a:hover {
+            color: white;
+        }
+        .buh-footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Стрелка-подсказка */
+        .hint-arrow {
             position: fixed;
             bottom: 100px;
             right: 100px;
             font-size: 48px;
             animation: bounce 1s infinite;
+            z-index: 99999;
+            pointer-events: none;
         }
         @keyframes bounce {
             0%, 100% { transform: translateY(0) rotate(-45deg); }
             50% { transform: translateY(-10px) rotate(-45deg); }
         }
+
+        @media (max-width: 900px) {
+            .buh-layout {
+                grid-template-columns: 1fr;
+            }
+            .buh-sidebar {
+                display: none;
+            }
+            .buh-footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="toolbar">
-        <strong>🧪 Тест виджета</strong>
+    <!-- Тулбар разработчика -->
+    <div class="dev-toolbar">
+        <strong>Тест виджета БухМэтч</strong>
         <span>|</span>
-        <span>Виджет справа внизу →</span>
+        <span>Виджет справа внизу</span>
         <span>|</span>
         <code>dataLayer</code> события в консоли (F12)
         <span>|</span>
         <a href="https://github.com/kulakov/buhmatch-prototype" target="_blank">GitHub</a>
     </div>
 
-    <!-- Пытаемся показать buhonline.ru, если не получится — fallback -->
-    <div class="site-frame" id="siteFrame">
-        <iframe src="https://www.buhonline.ru/" id="siteIframe" onload="checkIframe()" onerror="showFallback()"></iframe>
+    <!-- Муляж buhonline.ru -->
+    <div class="buh-site">
+        <!-- Шапка -->
+        <header class="buh-header">
+            <div class="buh-header-top">
+                <div class="buh-container">
+                    Справочник для бухгалтеров и руководителей
+                </div>
+            </div>
+            <div class="buh-container buh-header-main">
+                <a href="#" class="buh-logo">
+                    <div class="buh-logo-icon">Б</div>
+                    <span>БухОнлайн</span>
+                </a>
+                <div class="buh-search">
+                    <input type="text" placeholder="Поиск по сайту...">
+                </div>
+                <div class="buh-auth">
+                    <a href="#" class="buh-btn buh-btn-outline">Войти</a>
+                    <a href="#" class="buh-btn buh-btn-primary">Регистрация</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Навигация -->
+        <nav class="buh-nav">
+            <div class="buh-container">
+                <ul>
+                    <li class="active"><a href="#">Статьи</a></li>
+                    <li><a href="#">Справочник</a></li>
+                    <li><a href="#">Калькуляторы</a></li>
+                    <li><a href="#">Бланки</a></li>
+                    <li><a href="#">Форум</a></li>
+                    <li><a href="#">Курсы</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Контент -->
+        <main class="buh-content">
+            <div class="buh-container">
+                <div class="buh-layout">
+                    <!-- Статьи -->
+                    <div class="buh-articles">
+                        <article class="buh-article">
+                            <span class="buh-article-category">УСН</span>
+                            <h2><a href="#">Изменения в УСН с 2025 года: что нужно знать предпринимателям</a></h2>
+                            <p>С 1 января 2025 года вступают в силу изменения в порядке применения упрощённой системы налогообложения. Рассказываем, как подготовиться и что изменится в учёте.</p>
+                            <div class="buh-article-meta">
+                                <span>12 декабря 2024</span>
+                                <span>Просмотров: 1 247</span>
+                                <span>Комментариев: 23</span>
+                            </div>
+                        </article>
+
+                        <article class="buh-article">
+                            <span class="buh-article-category">Отчётность</span>
+                            <h2><a href="#">Сроки сдачи отчётности в декабре 2024</a></h2>
+                            <p>Напоминаем о ключевых датах для сдачи бухгалтерской и налоговой отчётности. Не пропустите дедлайны!</p>
+                            <div class="buh-article-meta">
+                                <span>10 декабря 2024</span>
+                                <span>Просмотров: 3 891</span>
+                                <span>Комментариев: 45</span>
+                            </div>
+                        </article>
+
+                        <article class="buh-article">
+                            <span class="buh-article-category">Кадры</span>
+                            <h2><a href="#">Как оформить сотрудника на удалёнку: пошаговая инструкция</a></h2>
+                            <p>Дистанционная работа стала нормой. Разбираемся, какие документы нужны и как правильно всё оформить по ТК РФ.</p>
+                            <div class="buh-article-meta">
+                                <span>8 декабря 2024</span>
+                                <span>Просмотров: 2 156</span>
+                                <span>Комментариев: 18</span>
+                            </div>
+                        </article>
+
+                        <article class="buh-article">
+                            <span class="buh-article-category">НДС</span>
+                            <h2><a href="#">Как проверить контрагента перед сделкой</a></h2>
+                            <p>Минимизируем налоговые риски: чек-лист проверки контрагента и сервисы для автоматической проверки.</p>
+                            <div class="buh-article-meta">
+                                <span>5 декабря 2024</span>
+                                <span>Просмотров: 1 823</span>
+                                <span>Комментариев: 31</span>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Сайдбар -->
+                    <aside class="buh-sidebar">
+                        <div class="buh-widget buh-banner">
+                            <h3>Нужен бухгалтер?</h3>
+                            <p>Подберём проверенного специалиста под ваш бизнес</p>
+                            <button class="buh-btn">Найти бухгалтера</button>
+                        </div>
+
+                        <div class="buh-widget">
+                            <h3>Популярное</h3>
+                            <ul class="buh-widget-list">
+                                <li><a href="#">Калькулятор УСН 2025</a></li>
+                                <li><a href="#">Проверка контрагента по ИНН</a></li>
+                                <li><a href="#">МРОТ 2025</a></li>
+                                <li><a href="#">Календарь бухгалтера</a></li>
+                                <li><a href="#">Реквизиты для уплаты налогов</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="buh-widget">
+                            <h3>Разделы</h3>
+                            <ul class="buh-widget-list">
+                                <li><a href="#">Налоги</a></li>
+                                <li><a href="#">Бухучёт</a></li>
+                                <li><a href="#">Кадры</a></li>
+                                <li><a href="#">Касса</a></li>
+                                <li><a href="#">Проверки</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </main>
+
+        <!-- Футер -->
+        <footer class="buh-footer">
+            <div class="buh-container">
+                <div class="buh-footer-grid">
+                    <div>
+                        <h4>О проекте</h4>
+                        <ul>
+                            <li><a href="#">О нас</a></li>
+                            <li><a href="#">Редакция</a></li>
+                            <li><a href="#">Реклама</a></li>
+                            <li><a href="#">Контакты</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Разделы</h4>
+                        <ul>
+                            <li><a href="#">Статьи</a></li>
+                            <li><a href="#">Справочник</a></li>
+                            <li><a href="#">Калькуляторы</a></li>
+                            <li><a href="#">Бланки</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Сервисы</h4>
+                        <ul>
+                            <li><a href="#">Проверка контрагента</a></li>
+                            <li><a href="#">Расчёт налогов</a></li>
+                            <li><a href="#">Курсы валют</a></li>
+                            <li><a href="#">Производственный календарь</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Поддержка</h4>
+                        <ul>
+                            <li><a href="#">Помощь</a></li>
+                            <li><a href="#">Обратная связь</a></li>
+                            <li><a href="#">Политика конфиденциальности</a></li>
+                            <li><a href="#">Пользовательское соглашение</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="buh-footer-bottom">
+                    &copy; 2024 БухОнлайн — справочник для бухгалтеров и руководителей
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <div class="fallback" id="fallback" style="display: none;">
-        <h1>Тестовая страница виджета БухМэтч</h1>
-
-        <div class="box">
-            <h2>⚠️ buhonline.ru не загрузился в iframe</h2>
-            <p>Это нормально — многие сайты блокируют загрузку в iframe из соображений безопасности (X-Frame-Options).</p>
-            <p><strong>Виджет работает!</strong> Нажмите на фиолетовую кнопку справа внизу.</p>
-        </div>
-
-        <div class="box">
-            <h2>Как тестировать на реальном сайте</h2>
-            <p>Откройте <a href="https://www.buhonline.ru/" target="_blank">buhonline.ru</a> и вставьте в консоль браузера (F12 → Console):</p>
-            <pre>var s = document.createElement('script');
-s.src = 'https://kulakov.github.io/buhmatch-prototype/widget.js';
-document.body.appendChild(s);</pre>
-        </div>
-
-        <div class="box">
-            <h2>Код для GTM</h2>
-            <p>Custom HTML тег:</p>
-            <pre>&lt;script src="https://kulakov.github.io/buhmatch-prototype/widget.js"&gt;&lt;/script&gt;</pre>
-        </div>
-
-        <div class="box">
-            <h2>События dataLayer</h2>
-            <p>Откройте консоль (F12) — там логируются все события:</p>
-            <pre>📊 buhmatch_init
-📊 buhmatch_answer { field: 'industry', value: 'Торговля' }
-📊 buhmatch_like { accountant: 'Анна Сидорова' }
-📊 buhmatch_match { accountant: '...', data: {...} }</pre>
-        </div>
-
-        <div class="arrow">→</div>
-    </div>
+    <!-- Стрелка-подсказка -->
+    <div class="hint-arrow">&#10145;</div>
 
     <!-- DataLayer для GTM -->
     <script>
@@ -140,34 +528,6 @@ document.body.appendChild(s);</pre>
             console.log('📊 dataLayer.push:', arguments[0]);
             return originalPush.apply(this, arguments);
         };
-
-        // Проверяем, загрузился ли iframe
-        let iframeLoaded = false;
-
-        function checkIframe() {
-            try {
-                const iframe = document.getElementById('siteIframe');
-                // Пытаемся получить доступ к содержимому — если не получится, значит cross-origin
-                const test = iframe.contentWindow.location.href;
-                iframeLoaded = true;
-            } catch (e) {
-                // Iframe загрузился, но cross-origin — это ок, виджет всё равно работает
-                iframeLoaded = true;
-            }
-        }
-
-        function showFallback() {
-            document.getElementById('siteFrame').style.display = 'none';
-            document.getElementById('fallback').style.display = 'block';
-        }
-
-        // Если iframe не загрузился за 3 секунды — показываем fallback
-        setTimeout(() => {
-            const iframe = document.getElementById('siteIframe');
-            if (!iframe.contentWindow || iframe.contentWindow.length === 0) {
-                // Возможно blocked, но виджет всё равно работает
-            }
-        }, 3000);
     </script>
 
     <!-- Виджет БухМэтч -->
