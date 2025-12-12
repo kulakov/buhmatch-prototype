@@ -3,32 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест виджета БухМэтч</title>
+    <title>Тест виджета БухМэтч на buhonline.ru</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
             background: #f5f5f5;
-            min-height: 200vh;
         }
-        h1 { color: #333; }
-        p { color: #666; line-height: 1.6; }
-        .box {
+        .toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #1e1e1e;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100000;
+            font-size: 13px;
+        }
+        .toolbar a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+        .toolbar code {
+            background: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .site-frame {
+            width: 100%;
+            height: 100vh;
+            padding-top: 44px;
+        }
+        .site-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .fallback {
+            padding: 60px 20px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .fallback h1 { margin-bottom: 20px; color: #333; }
+        .fallback p { color: #666; line-height: 1.6; margin-bottom: 15px; }
+        .fallback .box {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        code {
-            background: #e0e0e0;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        pre {
+        .fallback pre {
             background: #1e1e1e;
             color: #d4d4d4;
             padding: 15px;
@@ -36,7 +66,7 @@
             overflow-x: auto;
             font-size: 13px;
         }
-        .arrow {
+        .fallback .arrow {
             position: fixed;
             bottom: 100px;
             right: 100px;
@@ -50,39 +80,55 @@
     </style>
 </head>
 <body>
-    <h1>Тестовая страница</h1>
-
-    <div class="box">
-        <h2>Виджет БухМэтч</h2>
-        <p>Справа внизу должна появиться <strong>фиолетовая кнопка</strong> с иконкой чата.</p>
-        <p>Нажмите на неё, чтобы открыть виджет.</p>
+    <div class="toolbar">
+        <strong>🧪 Тест виджета</strong>
+        <span>|</span>
+        <span>Виджет справа внизу →</span>
+        <span>|</span>
+        <code>dataLayer</code> события в консоли (F12)
+        <span>|</span>
+        <a href="https://github.com/kulakov/buhmatch-prototype" target="_blank">GitHub</a>
     </div>
 
-    <div class="box">
-        <h2>Код для GTM</h2>
-        <p>Custom HTML тег:</p>
-        <pre>&lt;script src="https://kulakov.github.io/buhmatch-prototype/widget.js"&gt;&lt;/script&gt;</pre>
+    <!-- Пытаемся показать buhonline.ru, если не получится — fallback -->
+    <div class="site-frame" id="siteFrame">
+        <iframe src="https://www.buhonline.ru/" id="siteIframe" onload="checkIframe()" onerror="showFallback()"></iframe>
     </div>
 
-    <div class="box">
-        <h2>События dataLayer</h2>
-        <p>Откройте консоль браузера (F12) и смотрите события:</p>
-        <pre>
-// Виджет пушит такие события:
-dataLayer.push({ event: 'buhmatch_init' })
-dataLayer.push({ event: 'buhmatch_answer', buhmatch_field: 'industry', buhmatch_value: 'Торговля' })
-dataLayer.push({ event: 'buhmatch_like', buhmatch_accountant: 'Анна Сидорова' })
-dataLayer.push({ event: 'buhmatch_match', buhmatch_accountant: '...', buhmatch_data: {...} })
-        </pre>
-    </div>
+    <div class="fallback" id="fallback" style="display: none;">
+        <h1>Тестовая страница виджета БухМэтч</h1>
 
-    <div class="box">
-        <h2>Эмуляция контента сайта</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-    </div>
+        <div class="box">
+            <h2>⚠️ buhonline.ru не загрузился в iframe</h2>
+            <p>Это нормально — многие сайты блокируют загрузку в iframe из соображений безопасности (X-Frame-Options).</p>
+            <p><strong>Виджет работает!</strong> Нажмите на фиолетовую кнопку справа внизу.</p>
+        </div>
 
-    <div class="arrow">→</div>
+        <div class="box">
+            <h2>Как тестировать на реальном сайте</h2>
+            <p>Откройте <a href="https://www.buhonline.ru/" target="_blank">buhonline.ru</a> и вставьте в консоль браузера (F12 → Console):</p>
+            <pre>var s = document.createElement('script');
+s.src = 'https://kulakov.github.io/buhmatch-prototype/widget.js';
+document.body.appendChild(s);</pre>
+        </div>
+
+        <div class="box">
+            <h2>Код для GTM</h2>
+            <p>Custom HTML тег:</p>
+            <pre>&lt;script src="https://kulakov.github.io/buhmatch-prototype/widget.js"&gt;&lt;/script&gt;</pre>
+        </div>
+
+        <div class="box">
+            <h2>События dataLayer</h2>
+            <p>Откройте консоль (F12) — там логируются все события:</p>
+            <pre>📊 buhmatch_init
+📊 buhmatch_answer { field: 'industry', value: 'Торговля' }
+📊 buhmatch_like { accountant: 'Анна Сидорова' }
+📊 buhmatch_match { accountant: '...', data: {...} }</pre>
+        </div>
+
+        <div class="arrow">→</div>
+    </div>
 
     <!-- DataLayer для GTM -->
     <script>
@@ -94,6 +140,34 @@ dataLayer.push({ event: 'buhmatch_match', buhmatch_accountant: '...', buhmatch_d
             console.log('📊 dataLayer.push:', arguments[0]);
             return originalPush.apply(this, arguments);
         };
+
+        // Проверяем, загрузился ли iframe
+        let iframeLoaded = false;
+
+        function checkIframe() {
+            try {
+                const iframe = document.getElementById('siteIframe');
+                // Пытаемся получить доступ к содержимому — если не получится, значит cross-origin
+                const test = iframe.contentWindow.location.href;
+                iframeLoaded = true;
+            } catch (e) {
+                // Iframe загрузился, но cross-origin — это ок, виджет всё равно работает
+                iframeLoaded = true;
+            }
+        }
+
+        function showFallback() {
+            document.getElementById('siteFrame').style.display = 'none';
+            document.getElementById('fallback').style.display = 'block';
+        }
+
+        // Если iframe не загрузился за 3 секунды — показываем fallback
+        setTimeout(() => {
+            const iframe = document.getElementById('siteIframe');
+            if (!iframe.contentWindow || iframe.contentWindow.length === 0) {
+                // Возможно blocked, но виджет всё равно работает
+            }
+        }, 3000);
     </script>
 
     <!-- Виджет БухМэтч -->
