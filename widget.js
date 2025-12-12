@@ -38,18 +38,16 @@
     styles.textContent = `
         :host {
             all: initial;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-size: 14px;
-            line-height: 1.4;
-            color: #333;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: inherit;
-            line-height: inherit;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #333;
         }
 
         .bm-trigger {
