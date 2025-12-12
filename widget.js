@@ -13,6 +13,12 @@
         zIndex: 2147483647
     };
 
+    // Load Google Fonts
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'stylesheet';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
+    document.head.appendChild(fontLink);
+
     // Create shadow host
     const host = document.createElement('div');
     host.id = 'buhmatch-widget-host';
@@ -22,12 +28,17 @@
     // Create shadow DOM for style isolation
     const shadow = host.attachShadow({ mode: 'open' });
 
+    // Import font into shadow DOM
+    const fontStyle = document.createElement('style');
+    fontStyle.textContent = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');`;
+    shadow.appendChild(fontStyle);
+
     // Inject styles into shadow DOM
     const styles = document.createElement('style');
     styles.textContent = `
         :host {
             all: initial;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 14px;
             line-height: 1.4;
             color: #333;
